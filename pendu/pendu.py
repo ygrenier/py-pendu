@@ -38,6 +38,9 @@ def game(dictionary):
             print('No, this letter is not in the word.\n')
             nb_try += 1
 
+        if nb_try > 7:
+            print('You did not found the word (', goal_word,') In lower than 7 tryes.\nYou lost!')
+
       # the user won
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
 
