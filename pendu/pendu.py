@@ -2,6 +2,7 @@ from read_files import *
 from UI         import *
 import random
 
+  # goal_is_completed:
   # return True if the user found the word
 def goal_is_completed(user_word):
     for i in range(len(user_word)):
@@ -9,7 +10,8 @@ def goal_is_completed(user_word):
             return False
     return True
 
-  # reveal all the [letter] of the word
+  # reveal_char:
+  # reveal all the [letter] of the word. ex.: all the A
 def reveal_char(user_word, goal_word, letter):
     letter_is_in_word = False
     for i in range(len(goal_word)):
@@ -18,24 +20,40 @@ def reveal_char(user_word, goal_word, letter):
             letter_is_in_word = True
     return letter_is_in_word
 
-  # TODO
+  # game:
+  # the main loop of the game
 def game(dictionary):
+
+      # set the words
     goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
-    user_word = ['_'] * len(dictionary)
+    user_word = ['_'] * len(goal_word)
+
     nb_try = 0
     while not goal_is_completed(user_word):
-        print('voici votre mot :\n', user_word, '\n')
+        print('This is your word:\n', " ".join(user_word))
         letter = UI.get_letter()
         if reveal_char(user_word, goal_word, letter):
-            print('cette lettre est bien dans le mot.')
+            print('This letter is well in the word.\n')
         else:
-            print('Non, cette lettre n\'est pas dans le mot.')
+            print('No, this letter is not in the word.\n')
             nb_try += 1
-    print('Bravo !\nVous avez trouvé le mot en', nb_try, 'essais !')
+
+      # the user won
+    print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
 
 def main():
     UI.say_hello()  # explain the aim of the game
-    dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split()  # get the file content fully uppered in a list of words
-    game(dictionary)
+    dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
+
+    while True:
+        game(dictionary)
+        answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
+        while answer != 'y': # if answer == 'n', the return statement is executed.
+            if answer == 'y':
+                pass
+            elif answer == 'n':
+                return
+            else:
+                answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
 
 main()

@@ -1,8 +1,8 @@
-    # read_file :
-    # open a file and ret its content
+    # read_file:
+    # open a file and return its content
 def read_file(name):
 
-    try:
+    try:  # trying to open the specified file
         file = open(name, 'r')
     except FileNotFoundError:
         print('cannot find the file', name)
