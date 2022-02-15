@@ -12,12 +12,14 @@ def goal_is_completed(user_word):
 
   # reveal_char:
   # reveal all the [letter] of the word. ex.: all the A
-def reveal_char(user_word, goal_word, letter):
-    letter_is_in_word = False
+def reveal_char(user_word, goal_word, letter, proposed_letters):
+    letter_is_in_word = 0
+    if letter in proposed_letters:
+        return 2
     for i in range(len(goal_word)):
         if goal_word[i] == letter:
             user_word[i] = letter
-            letter_is_in_word = True
+            letter_is_in_word = 1
     return letter_is_in_word
 
   # game:
@@ -28,14 +30,21 @@ def game(dictionary):
     goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
     user_word = ['_'] * len(goal_word)
 
+    proposed_letters = []
+
     nb_try = 0
     while not goal_is_completed(user_word):
         print('This is your word:\n', " ".join(user_word))
         letter = UI.get_letter()
-        if reveal_char(user_word, goal_word, letter):
-            print('This letter is well in the word.\n')
+        return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
+        if return_code == 2:
+            print('You already proposed this letter.')
+        elif return_code == 1:
+            print('This letter is well in the word.')
+            proposed_letters.append(letter)
         else:
             print('No, this letter is not in the word.\n')
+            proposed_letters.append(letter)
             nb_try += 1
 
       # the user won
