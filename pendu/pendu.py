@@ -22,10 +22,9 @@ def reveal_char(user_word, goal_word, letter):
 
   # game:
   # the main loop of the game
-def game(dictionary):
+def game(goal_word):
 
       # set the words
-    goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
     user_word = ['_'] * len(goal_word)
 
     nb_try = 0
@@ -43,10 +42,13 @@ def game(dictionary):
 
 def main():
     UI.say_hello()  # explain the aim of the game
+
+#    if UI.get_nb_players() == 1:
     dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
 
     while True:
-        game(dictionary)
+        goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
+        game(goal_word)
         answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
         while answer != 'y': # if answer == 'n', the return statement is executed.
             if answer == 'y':
@@ -55,5 +57,24 @@ def main():
                 return
             else:
                 answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+
+#    else:
+#          # getting the word from the first player
+#       goal_word = input('The first player enter the word:\n>> ')
+#        while not goal_word.isalpha():
+#            goal_worl = input('please enter a word.')
+""" 
+          # the second player has to find it
+        while True:
+            game(goal_word)
+            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
+            while answer != 'y': # if answer == 'n', the return statement is executed.
+                if answer == 'y':
+                    pass
+                elif answer == 'n':
+                    return
+                else:
+                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+ """        
 
 main()
