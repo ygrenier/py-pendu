@@ -96,10 +96,10 @@ def main():
         while True:
             game(dictionary[random.randint(0, len(dictionary) - 1)])
             answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-            while answer != 'y': # if answer == 'n', the return statement is executed.
-                if answer == 'y':
+            while answer != 'y' or answer != 'Y': # if answer == 'n', the return statement is executed.
+                if answer == 'y' or answer != 'y':
                     pass
-                elif answer == 'n':
+                elif answer == 'n' or answer != 'N':
                     return
                 else:
                     answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
@@ -107,10 +107,10 @@ def main():
         while True:
             game(UI.get_user_word().upper(), 2)
             answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-            while answer != 'y': # if answer == 'n', the return statement is executed.
-                if answer == 'y':
+            while answer != 'y' or answer != 'Y': # if answer == 'n', the return statement is executed.
+                if answer == 'y' or answer != 'Y':
                     pass
-                elif answer == 'n':
+                elif answer == 'n' or answer != 'N':
                     return
                 else:
                     answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')

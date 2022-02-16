@@ -25,24 +25,51 @@ def say_hello():
     else:
         print('You are maybe not French?\n')
 
+  # getChar:
+  # code from https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
+  # read only one char (don't wait for a '\n')
+def getChar():
+    try:
+        # for Windows-based systems
+        import msvcrt # If successful, we are on Windows
+        return str(msvcrt.getch())[2]
+
+    except ImportError:
+        # for POSIX-based systems (with termios & tty support)
+        import tty, sys, termios  # raises ImportError if unsupported
+
+        fd = sys.stdin.fileno()
+        oldSettings = termios.tcgetattr(fd)
+
+        try:
+            tty.setcbreak(fd)
+            answer = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, oldSettings)
+
+        return answer
 
   # get_letter:
   # get a letter entered by the use
 def get_letter():
-    letter = input('try a letter:\n>> ')
+    print('try a letter:\n>> ', end='')
+    letter = getChar()
     letter_is_valid = (len(letter) == 1) and (letter.isalpha())
 
     while not letter_is_valid:  # the entered letter is not valid
         if len(letter) > 1:
-            letter = input('please, enter only one letter.\n>> ')
+            print('please, enter only one letter.\n>> ', end='')
+            letter = getChar()
             letter_is_valid = (len(letter) == 1) and (letter.isalpha())
         elif len(letter) < 1:
-            letter = input('please, enter one letter.\n>> ')
+            print('please, enter one letter.\n>> ', end='')
+            letter = getChar()
             letter_is_valid = (len(letter) == 1) and (letter.isalpha())
         elif letter.isalpha():
             return letter.upper() # all letters are upped, to compare them easier
         else:
-            letter = input('please, enter a letter\n>> ')
+            print('please, enter a letter\n>> ', end='')
+            letter = getChar()
             letter_is_valid = (len(letter) == 1) and (letter.isalpha())
 
     return letter.upper()
