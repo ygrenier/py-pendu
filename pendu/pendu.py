@@ -26,9 +26,8 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
 
   # game:
   # the main loop of the game
-def game(dictionary):
+def game(goal_word, nb_players: int = ...):
 
-    goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
     print('[DEBUG]: the word is', goal_word)
     user_word = ['_'] * len(goal_word)
     proposed_letters = []
@@ -62,9 +61,10 @@ def game(dictionary):
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
 
     game_time = datetime.now() - time_before
-    points = calculate_points(goal_word, nb_try, time_before, game_time)
-    if points != 0:
-        write_files.write_file('pendu/data/points.txt', str(points) + "\n")
+    if nb_players == 1:
+        points = calculate_points(goal_word, nb_try, time_before, game_time)
+        if points != 0:
+            write_files.write_file('pendu/data/points.txt', str(points) + "\n")
 
     return nb_try
 
@@ -89,17 +89,32 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
 
 def main():
     UI.say_hello()  # explain the aim of the game
-    dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
+    nb_players = UI.get_nb_players()
 
-    while True:
-        nb_try = game(dictionary)
-        answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-        while answer != 'y': # if answer == 'n', the return statement is executed.
-            if answer == 'y':
-                pass
-            elif answer == 'n':
-                return
-            else:
-                answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+    if nb_players == 1:
+        dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
+
+        while True:
+            game(dictionary[random.randint(0, len(dictionary) - 1)])
+            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
+            while answer != 'y': # if answer == 'n', the return statement is executed.
+                if answer == 'y':
+                    pass
+                elif answer == 'n':
+                    return
+                else:
+                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+    else:
+        while True:
+            game(UI.get_user_word().upper())
+            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
+            while answer != 'y': # if answer == 'n', the return statement is executed.
+                if answer == 'y':
+                    pass
+                elif answer == 'n':
+                    return
+                else:
+                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+
 
 main()

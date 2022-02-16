@@ -1,7 +1,11 @@
+from os                 import system
+from sys                import platform
+from statistics         import mean
+from turtle import clear
+from files_interactions import *
+
   # say_hello:
   # print a welcoming message
-from statistics import mean
-from files_interactions import *
 def say_hello():
     print('Welcome in the hangman game!')
     print('You will have to find a word.')
@@ -23,7 +27,7 @@ def say_hello():
         print('You are maybe not French?\n')
 
 
- # get_letter:
+  # get_letter:
   # get a letter entered by the use
 def get_letter():
     letter = input('try a letter:\n>> ')
@@ -43,3 +47,30 @@ def get_letter():
             letter_is_valid = (len(letter) == 1) and (letter.isalpha())
 
     return letter.upper()
+
+  # get_nb_players:
+  # ask the players how many there are (1 ou 2)
+def get_nb_players():
+    answer = input('Do you play with one player or two players?\n>> ')
+    while (not answer.isdigit()) or ((int(answer) != 1) and (int(answer) != 2)) :
+        answer = input('Please enter 1 or 2.\n>> ')
+    return int(answer)
+
+  # get_user_word:
+  # ask the first player to enter the word
+def get_user_word():
+    word = input('The first player enter the word to search:\n>> ')
+    while not word.isalpha():
+        word = input('Please, enter only letters.\n>> ')
+
+    if 'win' in platform: # if it's running on windows
+        system('cls')
+    elif 'linux' in platform: # if it's running on linux
+        system('clear')
+    else:
+        for i in range(100):
+            print()
+        print('Your OS is not taken care by this program, so it only printed 100 empty lines.')
+    print('The first player entered a word. You have to fin it!')
+
+    return word
