@@ -35,6 +35,7 @@ def game(goal_word, nb_players: int = 1):
     time_before = datetime.now()
 
     while not goal_is_completed(user_word):
+        UI.draw_hangman(nb_try)
         if len(proposed_letters) > 0:
             print('You already proposed the letters:', ", ".join(proposed_letters), ".")
         print('You still can do', 7 - nb_try, 'mistakes.')
@@ -53,6 +54,7 @@ def game(goal_word, nb_players: int = 1):
             nb_try += 1
 
         if nb_try > 7:
+            UI.draw_hangman(8)
             print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!')
             return nb_try
 
