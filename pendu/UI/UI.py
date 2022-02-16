@@ -1,7 +1,6 @@
 from os                 import system
 from sys                import platform
 from statistics         import mean
-from turtle import clear
 from files_interactions import *
 
   # say_hello:

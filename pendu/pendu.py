@@ -116,23 +116,4 @@ def main():
                 else:
                     answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
 
-#    else:
-#          # getting the word from the first player
-#       goal_word = input('The first player enter the word:\n>> ')
-#        while not goal_word.isalpha():
-#            goal_worl = input('please enter a word.')
-""" 
-          # the second player has to find it
-        while True:
-            game(goal_word)
-            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-            while answer != 'y': # if answer == 'n', the return statement is executed.
-                if answer == 'y':
-                    pass
-                elif answer == 'n':
-                    return
-                else:
-                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
- """        
-
 main()
