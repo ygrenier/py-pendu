@@ -28,7 +28,6 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
   # the main loop of the game
 def game(goal_word, nb_players: int = 1):
 
-    print('[DEBUG]: the word is', goal_word)
     user_word = ['_'] * len(goal_word)
     proposed_letters = []
     nb_try = 0
@@ -81,8 +80,6 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
         average_time = game_time / len(goal_word)
     else:
         average_time = game_time / len(goal_word)
-    print('[DEBUG] average time:', round(average_time.total_seconds()))
-    print('[DEBUG] nb_try:', nb_try)
     points = round(average_time.total_seconds()) * 6 + nb_try * 5
     print('You earned a score of', points, 'points by finding this word.')
     return points
