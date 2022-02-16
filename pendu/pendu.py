@@ -26,7 +26,7 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
 
   # game:
   # the main loop of the game
-def game(goal_word, nb_players: int = ...):
+def game(goal_word, nb_players: int = 1):
 
     print('[DEBUG]: the word is', goal_word)
     user_word = ['_'] * len(goal_word)
@@ -106,7 +106,7 @@ def main():
                     answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
     else:
         while True:
-            game(UI.get_user_word().upper())
+            game(UI.get_user_word().upper(), 2)
             answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
             while answer != 'y': # if answer == 'n', the return statement is executed.
                 if answer == 'y':
@@ -115,6 +115,5 @@ def main():
                     return
                 else:
                     answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
-
 
 main()

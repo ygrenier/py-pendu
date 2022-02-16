@@ -9,7 +9,7 @@ from files_interactions import *
 def say_hello():
     print('Welcome in the hangman game!')
     print('You will have to find a word.')
-    print('according to your time and your number of mistakes, you will earn some points.')
+    print('according to your time and your number of mistakes, you will earn some points. Note that in 2 players mode, you will not earn points.')
     print('if you want, your final goal will be to have the fewer point that you can!\n')
     point_average = mean(int(x) for x in read_files.read_file('pendu/data/points.txt').splitlines())
     print('actually, you have an average of', point_average, 'points.')
@@ -71,6 +71,6 @@ def get_user_word():
         for i in range(100):
             print()
         print('Your OS is not taken care by this program, so it only printed 100 empty lines.')
-    print('The first player entered a word. You have to fin it!')
+    print('The first player entered a word. You have to find it!\n')
 
     return word
