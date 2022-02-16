@@ -3,7 +3,7 @@
 def say_hello():
     print('Welcome in the hangman game!')
 
-  # get_letter:
+ # get_letter:
   # get a letter entered by the use
 def get_letter():
     letter = input('try a letter:\n>> ')

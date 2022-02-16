@@ -1,5 +1,5 @@
-from read_files import *
-from UI         import *
+from files_interactions import *
+from UI                 import *
 import random
 
   # goal_is_completed:
@@ -34,18 +34,26 @@ def game(dictionary):
 
     nb_try = 0
     while not goal_is_completed(user_word):
+        if len(proposed_letters) > 0:
+            print('You already proposed the letters:', ", ".join(proposed_letters), ".")
+        print('You still can do', 7 - nb_try, 'mistakes.')
         print('This is your word:\n', " ".join(user_word))
+
         letter = UI.get_letter()
         return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
         if return_code == 2:
-            print('You already proposed this letter.')
+            print('You already proposed this letter.\n')
         elif return_code == 1:
-            print('This letter is well in the word.')
+            print('This letter is well in the word.\n')
             proposed_letters.append(letter)
         else:
             print('No, this letter is not in the word.\n')
             proposed_letters.append(letter)
             nb_try += 1
+
+        if nb_try > 7:
+            print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!')
+            return
 
       # the user won
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
