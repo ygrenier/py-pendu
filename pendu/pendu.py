@@ -1,4 +1,4 @@
-from threading import activeCount
+from threading          import activeCount
 from files_interactions import *
 from UI                 import *
 from datetime           import datetime
@@ -62,7 +62,9 @@ def game(dictionary):
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
 
     game_time = datetime.now() - time_before
-    calculate_points(goal_word, nb_try, time_before, game_time)
+    points = calculate_points(goal_word, nb_try, time_before, game_time)
+    if points != 0:
+        write_files.write_file('pendu/data/points.txt', str(points) + "\n")
 
     return nb_try
 
@@ -71,7 +73,7 @@ def game(dictionary):
 def calculate_points(goal_word, nb_try, time_before, game_time):
     if nb_try > 7:
         print('You did not found the word, so you won no points this time.')
-        return
+        return 0
 
     average_time = 0
     if nb_try == 0:  # risk of division by 0
@@ -83,6 +85,7 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
     print('[DEBUG] nb_try:', nb_try)
     points = round(average_time.total_seconds()) * 6 + nb_try * 5
     print('You earned a score of', points, 'points by finding this word.')
+    return points
 
 def main():
     UI.say_hello()  # explain the aim of the game
