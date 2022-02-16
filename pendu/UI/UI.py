@@ -2,6 +2,9 @@
   # print a welcoming message
 def say_hello():
     print('Welcome in the hangman game!')
+    print('You will have to find a word.')
+    print('according to your time and your number of mistakes, you will earn some points.')
+    print('if you want, your final goal will be to have the fewer point that you can!')
 
  # get_letter:
   # get a letter entered by the use

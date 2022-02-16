@@ -1,5 +1,7 @@
+from threading import activeCount
 from files_interactions import *
 from UI                 import *
+from datetime           import datetime
 import random
 
   # goal_is_completed:
@@ -26,13 +28,14 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
   # the main loop of the game
 def game(dictionary):
 
-      # set the words
     goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
+    print('[DEBUG]: the word is', goal_word)
     user_word = ['_'] * len(goal_word)
-
     proposed_letters = []
-
     nb_try = 0
+
+    time_before = datetime.now()
+
     while not goal_is_completed(user_word):
         if len(proposed_letters) > 0:
             print('You already proposed the letters:', ", ".join(proposed_letters), ".")
@@ -57,7 +60,29 @@ def game(dictionary):
 
       # the user won
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
+
+    game_time = datetime.now() - time_before
+    calculate_points(goal_word, nb_try, time_before, game_time)
+
     return nb_try
+
+  # calculate_points:
+  # print how many points the player earned
+def calculate_points(goal_word, nb_try, time_before, game_time):
+    if nb_try > 7:
+        print('You did not found the word, so you won no points this time.')
+        return
+
+    average_time = 0
+    if nb_try == 0:  # risk of division by 0
+        print('Incredible... You found it with no mistakes!')
+        average_time = game_time / len(goal_word)
+    else:
+        average_time = game_time / len(goal_word)
+    print('[DEBUG] average time:', round(average_time.total_seconds()))
+    print('[DEBUG] nb_try:', nb_try)
+    points = round(average_time.total_seconds()) * 6 + nb_try * 5
+    print('You earned a score of', points, 'points by finding this word.')
 
 def main():
     UI.say_hello()  # explain the aim of the game
@@ -65,11 +90,6 @@ def main():
 
     while True:
         nb_try = game(dictionary)
-        if nb_try > 7:
-            print('You did not found the word, so you won no points this time.')
-        else:
-            points = 8000 - nb_try * 1000
-            print('You won', points, 'points by finding this word.')
         answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
         while answer != 'y': # if answer == 'n', the return statement is executed.
             if answer == 'y':
