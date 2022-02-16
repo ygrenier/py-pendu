@@ -53,17 +53,23 @@ def game(dictionary):
 
         if nb_try > 7:
             print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!')
-            return
+            return nb_try
 
       # the user won
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
+    return nb_try
 
 def main():
     UI.say_hello()  # explain the aim of the game
     dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
 
     while True:
-        game(dictionary)
+        nb_try = game(dictionary)
+        if nb_try > 7:
+            print('You did not found the word, so you won no points this time.')
+        else:
+            points = 8000 - nb_try * 1000
+            print('You won', points, 'points by finding this word.')
         answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
         while answer != 'y': # if answer == 'n', the return statement is executed.
             if answer == 'y':
