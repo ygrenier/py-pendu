@@ -3,6 +3,19 @@ from sys                import platform
 from statistics         import mean
 from files_interactions import *
 
+  # avg_points:
+  # return the average of points of the user [name]
+def avg_points(name):
+    try:
+        avg_points = mean(int(x) for x in read_files.read_file('pendu/data/' + name + 'points.txt').splitlines())
+        return avg_points
+    except FileNotFoundError as error:
+        print('[UI.py :: avg_points] ', error)
+        return 0
+    except TypeError as error:
+        print('[UI.py :: avg_points] ', error)
+        return 0
+
   # say_hello:
   # print a welcoming message
 def say_hello():
@@ -10,20 +23,20 @@ def say_hello():
     print('You will have to find a word.')
     print('according to your time and your number of mistakes, you will earn some points. Note that in 2 players mode, you will not earn points.')
     print('if you want, your final goal will be to have the fewer point that you can!\n')
-    point_average = mean(int(x) for x in read_files.read_file('pendu/data/points.txt').splitlines())
-    print('actually, you have an average of', point_average, 'points.')
-    if point_average < 10:
-        print('You are an excellent player!\n')
-    elif point_average < 20:
-        print('You are a realy good player!')
-    elif point_average < 30:
-        print('You are a good player.\n')
-    elif point_average < 40:
-        print('You may do better!\n')
-    elif point_average < 50:
-        print('You are not realy good at this game...\nEverybody has strong points and weak points.\n')
-    else:
-        print('You are maybe not French?\n')
+    ### TODO: print best scores
+    #  print('actually, you have an average of', point_average, 'points.')
+    # if point_average < 10:
+    #     print('You are an excellent player!\n')
+    # elif point_average < 20:
+    #     print('You are a realy good player!')
+    # elif point_average < 30:
+    #     print('You are a good player.\n')
+    # elif point_average < 40:
+    #     print('You may do better!\n')
+    # elif point_average < 50:
+    #     print('You are not realy good at this game...\nEverybody has strong points and weak points.\n')
+    # else:
+    #     print('You are maybe not French?\n')
 
   # getChar:
   # code from https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
@@ -164,3 +177,23 @@ def draw_hangman(n):
         """
     ]
     print(hangman[n], "\n")
+
+  # play_again:
+  # get if the player want to play again (or not)
+def play_again():
+    answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
+    while True:
+        if answer == 'y' or answer == 'y':
+            return True
+        elif answer == 'n' or answer == 'N':
+            return False
+        else:
+            answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+
+  # get_name:
+  # get the name of the user
+def get_name():
+    name = input('What is your name?\n>> ')
+    while (not name.isalnum()) or (len(name) > 15):
+        name = input('Please, enter fewer than 15 letters and digits:\n>> ')
+    return name

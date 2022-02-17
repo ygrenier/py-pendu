@@ -4,6 +4,8 @@ from UI                 import *
 from datetime           import datetime
 import random
 
+from pendu.UI.UI import avg_points, get_name, play_again
+
   # goal_is_completed:
   # return True if the user found the word
 def goal_is_completed(user_word):
@@ -17,16 +19,24 @@ def goal_is_completed(user_word):
 def reveal_char(user_word, goal_word, letter, proposed_letters):
     letter_is_in_word = 0
     if letter in proposed_letters:
+        print('You already proposed this letter.\n')
         return 2
+
     for i in range(len(goal_word)):
         if goal_word[i] == letter:
             user_word[i] = letter
             letter_is_in_word = 1
+
+    if letter_is_in_word:
+        print('This letter is well in the word.\n')
+    else:
+        print('No, this letter is not in the word.\n')
+
     return letter_is_in_word
 
   # game:
   # the main loop of the game
-def game(goal_word, nb_players: int = 1):
+def game(goal_word, nb_players, name: str = 'nameless user'):
 
     user_word = ['_'] * len(goal_word)
     proposed_letters = []
@@ -43,15 +53,10 @@ def game(goal_word, nb_players: int = 1):
 
         letter = UI.get_letter()
         return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
-        if return_code == 2:
-            print('You already proposed this letter.\n')
-        elif return_code == 1:
-            print('This letter is well in the word.\n')
+        if return_code != 2:
             proposed_letters.append(letter)
-        else:
-            print('No, this letter is not in the word.\n')
-            proposed_letters.append(letter)
-            nb_try += 1
+            if return_code == 0:
+                nb_try += 1
 
         if nb_try > 7:
             UI.draw_hangman(8)
@@ -65,7 +70,10 @@ def game(goal_word, nb_players: int = 1):
     if nb_players == 1:
         points = calculate_points(goal_word, nb_try, time_before, game_time)
         if points != 0:
-            write_files.write_file('pendu/data/points.txt', str(points) + "\n")
+            write_files.write_file('pendu/data/' + name + '_points.txt', str(points) + "\n")
+            point_average = avg_points(name)
+            if point_average > 0:
+                print('You have now a total of', point_average, 'points.')
 
     return nb_try
 
@@ -86,33 +94,23 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
     print('You earned a score of', points, 'points by finding this word.')
     return points
 
+  # main:
+  # lunch all others functions
 def main():
     UI.say_hello()  # explain the aim of the game
     nb_players = UI.get_nb_players()
 
     if nb_players == 1:
+        name = get_name()
         dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
-
         while True:
             game(dictionary[random.randint(0, len(dictionary) - 1)])
-            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-            while answer != 'y' or answer != 'Y': # if answer == 'n', the return statement is executed.
-                if answer == 'y' or answer != 'y':
-                    pass
-                elif answer == 'n' or answer != 'N':
-                    return
-                else:
-                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+            if not play_again():
+                return
     else:
         while True:
             game(UI.get_user_word().upper(), 2)
-            answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
-            while answer != 'y' or answer != 'Y': # if answer == 'n', the return statement is executed.
-                if answer == 'y' or answer != 'Y':
-                    pass
-                elif answer == 'n' or answer != 'N':
-                    return
-                else:
-                    answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
+            if not play_again():
+                return
 
 main()
