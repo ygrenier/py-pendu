@@ -3,17 +3,31 @@ from sys                import platform
 from statistics         import mean
 from files_interactions import *
 
+  # clear:
+  # clear the consol
+def clear():
+    if 'win' in platform: # if it's running on windows
+        system('cls')
+    elif 'linux' in platform: # if it's running on linux
+        system('clear')
+    else:
+        for i in range(100):
+            print()
+        print('Your OS is not taken care by this program, so it only printed 100 empty lines. Please don\'t cheat!')
+
   # avg_points:
   # return the average of points of the user [name]
 def avg_points(name):
     try:
-        avg_points = mean(int(x) for x in read_files.read_file('pendu/data/' + name + 'points.txt').splitlines())
+        avg_points = mean(int(x) for x in read_files.read_file('pendu/data/' + name + '_points.txt').splitlines())
         return avg_points
     except FileNotFoundError as error:
-        print('[UI.py :: avg_points] ', error)
+        print('[UI.py :: avg_points] FileNotFoundError; ', end='')
+        print(error)
         return 0
     except TypeError as error:
-        print('[UI.py :: avg_points] ', error)
+        print('[UI.py :: avg_points] TypeError; ', end='')
+        print(error)
         return 0
 
   # say_hello:
@@ -101,15 +115,7 @@ def get_user_word():
     word = input('The first player enter the word to search:\n>> ')
     while not word.isalpha():
         word = input('Please, enter only letters.\n>> ')
-
-    if 'win' in platform: # if it's running on windows
-        system('cls')
-    elif 'linux' in platform: # if it's running on linux
-        system('clear')
-    else:
-        for i in range(100):
-            print()
-        print('Your OS is not taken care by this program, so it only printed 100 empty lines.')
+    clear()
     print('The first player entered a word. You have to find it!\n')
 
     return word
@@ -196,4 +202,11 @@ def get_name():
     name = input('What is your name?\n>> ')
     while (not name.isalnum()) or (len(name) > 15):
         name = input('Please, enter fewer than 15 letters and digits:\n>> ')
+    points_average = avg_points(name)
+    if points_average == 0:
+        print('you have not collected points so far.')
+    else:
+        print('You have actually an average of', points_average, 'points.')
+    input('\nPress enter to begin...')
+    clear()
     return name

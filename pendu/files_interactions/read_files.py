@@ -4,8 +4,8 @@ def read_file(name):
 
     try:  # trying to open the specified file
         file = open(name, 'r')
-    except FileNotFoundError:
-        print('cannot find the file', name)
+    except FileNotFoundError as error:
+        print('[write_files.py :: write_file] ' + error)
         exit()
 
     content = file.read()

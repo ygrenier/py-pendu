@@ -4,8 +4,6 @@ from UI                 import *
 from datetime           import datetime
 import random
 
-from pendu.UI.UI import avg_points, get_name, play_again
-
   # goal_is_completed:
   # return True if the user found the word
 def goal_is_completed(user_word):
@@ -71,9 +69,8 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
         points = calculate_points(goal_word, nb_try, time_before, game_time)
         if points != 0:
             write_files.write_file('pendu/data/' + name + '_points.txt', str(points) + "\n")
-            point_average = avg_points(name)
-            if point_average > 0:
-                print('You have now a total of', point_average, 'points.')
+            point_average = UI.avg_points(name)
+            print('You have now a total of', point_average, 'points.')
 
     return nb_try
 
@@ -101,11 +98,11 @@ def main():
     nb_players = UI.get_nb_players()
 
     if nb_players == 1:
-        name = get_name()
+        name = UI.get_name()
         dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
         while True:
-            game(dictionary[random.randint(0, len(dictionary) - 1)])
-            if not play_again():
+            game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
+            if not UI.play_again():
                 return
     else:
         while True:
