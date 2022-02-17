@@ -88,23 +88,51 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
     print('You earned a score of', points, 'points by finding this word.')
     return points
 
+  # start:
+  # get the entered command
+def start(commands):
+    print('enter a command:')
+    print('(type <help> for a command list)')
+    cmd = input('>> ')
+    while True:
+        if cmd in commands:
+            return commands.index(cmd) + 1
+        else:
+            cmd = input('Please, enter a valid command (<help> for a list)\n>> ')
+
+    return 1
+
   # main:
   # start all others functions
 def main():
+    UI.clear()
     UI.say_hello()  # explain the aim of the game
-    nb_players = UI.get_nb_players()
 
-    if nb_players == 1:
-        name = UI.get_name()
-        dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content fully and formatted to a list of words
-        while True:
-            game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
-            if not UI.play_again():
-                return
-    else:
-        while True:
-            game(UI.get_user_word().upper(), 2)
-            if not UI.play_again():
-                return
+    commands = ['play1', 'play2', 'top5', 'battle', 'exit', 'help']
+
+    while True:
+        cmd = start(commands)
+        if cmd == 1: # entered command: play1
+            name = UI.get_name()
+            dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content formatted to a list of words
+            play = True
+            while play:
+                game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
+                if not UI.play_again():
+                    play = False
+        elif cmd == 2: # entered command: play2
+            play = True
+            while play:
+                game(UI.get_user_word().upper(), 2)
+                if not UI.play_again():
+                    play = False
+        elif cmd == 3: # entered command: top5
+            UI.best_scores()
+        elif cmd == 4: # entered command: battle
+            pass
+        elif cmd == 5: # entered command: exit
+            return
+        elif cmd == 6: # entered command: help
+            UI.command_list()
 
 main()

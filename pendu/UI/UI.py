@@ -23,7 +23,6 @@ def say_hello():
     print('You will have to find a word.')
     print('according to your time and your number of mistakes, you will earn some points. Note that in 2 players mode, you will not earn points.')
     print('if you want, your final goal will be to have the fewer point that you can!\n')
-    best_scores()
 
   # getChar:
   # code from https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
@@ -81,6 +80,7 @@ def get_nb_players():
   # get_user_word:
   # ask the first player to enter the word
 def get_user_word():
+    clear()
     word = input('The first player enter the word to search:\n>> ')
     while not word.isalpha():
         word = input('Please, enter only letters.\n>> ')
@@ -159,8 +159,10 @@ def play_again():
     answer = input('Do you want to play again?\nPlease answer y or n:\n>> ')
     while True:
         if answer == 'y' or answer == 'y':
+            clear()
             return True
         elif answer == 'n' or answer == 'N':
+            clear()
             return False
         else:
             answer = input('please, enter y for yes or n for no.\nDo you want to play again?\n>> ')
@@ -200,10 +202,23 @@ def best_scores():
       # sort it
     sorted_scores = dict(sorted(scores.items(), key= lambda x:x[1]))
       # print the betters
-    print('best players:')
+    print('\nbest players:')
     i = 1
     for name, score in sorted_scores.items():
         print(i, '. ', name, ' : ', score)
         if i >= 5:
             break
         i += 1
+    print()
+
+def command_list():
+    print('A short command list:')
+    print(
+'''
+top5   : print the 5 better players
+play1  : play in 1 player mode
+play2  : play in 2 player mode
+battle : play in battle mode
+exit   : leave the game
+help   : print this command list
+''')
