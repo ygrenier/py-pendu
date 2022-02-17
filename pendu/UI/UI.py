@@ -169,16 +169,17 @@ def play_again():
 
   # get_name:
   # get the name of the user
-def get_name():
+def get_name(has_played):
     name = input('What is your name?\n>> ')
     while (not name.isalnum()) or (len(name) > 15):
         name = input('Please, enter fewer than 15 letters and digits:\n>> ')
     points_average = avg_points(name)
     if points_average == 0:
         print('you have not collected points so far.')
-        write_files.write_file('pendu/data/index.txt', name + "\n")
+        has_played = False
     else:
         print('You have actually an average of', points_average, 'points.')
+        has_played = True
     input('\nPress enter to begin...')
     clear()
     return name

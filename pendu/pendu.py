@@ -59,7 +59,7 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
         if nb_try > 7:
             UI.draw_hangman(8)
             print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!')
-            return nb_try
+            return 0
 
       # the user won
     print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
@@ -72,7 +72,7 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
             point_average = UI.avg_points(name)
             print('You have now a total of', point_average, 'points.')
 
-    return nb_try
+    return points
 
   # calculate_points:
   # print how many points the player earned
@@ -113,11 +113,14 @@ def main():
     while True:
         cmd = start(commands)
         if cmd == 1: # entered command: play1
-            name = UI.get_name()
+            has_played = False
+            name = UI.get_name(has_played)
             dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content formatted to a list of words
             play = True
             while play:
-                game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
+                points = game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
+                if not has_played and points > 0:
+                    write_files.write_file('pendu/data/index.txt', name + "\n")
                 if not UI.play_again():
                     play = False
         elif cmd == 2: # entered command: play2
