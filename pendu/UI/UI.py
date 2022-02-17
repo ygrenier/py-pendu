@@ -59,18 +59,14 @@ def get_letter():
     while not letter_is_valid:  # the entered letter is not valid
         if len(letter) > 1:
             print('please, enter only one letter.\n>> ', end='')
-            letter = getChar()
-            letter_is_valid = (len(letter) == 1) and (letter.isalpha())
         elif len(letter) < 1:
             print('please, enter one letter.\n>> ', end='')
-            letter = getChar()
-            letter_is_valid = (len(letter) == 1) and (letter.isalpha())
         elif letter.isalpha():
             return letter.upper() # all letters are upped, to compare them easier
         else:
             print('please, enter a letter\n>> ', end='')
-            letter = getChar()
-            letter_is_valid = (len(letter) == 1) and (letter.isalpha())
+        letter = getChar()
+        letter_is_valid = (len(letter) == 1) and (letter.isalpha())
 
     return letter.upper()
 

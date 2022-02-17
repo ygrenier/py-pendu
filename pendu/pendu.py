@@ -81,18 +81,15 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
         print('You did not found the word, so you won no points this time.')
         return 0
 
-    average_time = 0
-    if nb_try == 0:  # risk of division by 0
+    if nb_try == 0:
         print('Incredible... You found it with no mistakes!')
-        average_time = game_time / len(goal_word)
-    else:
-        average_time = game_time / len(goal_word)
+    average_time = game_time / len(goal_word)
     points = round(average_time.total_seconds()) * 6 + nb_try * 5
     print('You earned a score of', points, 'points by finding this word.')
     return points
 
   # main:
-  # lunch all others functions
+  # start all others functions
 def main():
     UI.say_hello()  # explain the aim of the game
     nb_players = UI.get_nb_players()
