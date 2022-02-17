@@ -15,20 +15,6 @@ def clear():
             print()
         print('Your OS is not taken care by this program, so it only printed 100 empty lines. Please don\'t cheat!')
 
-  # avg_points:
-  # return the average of points of the user [name]
-def avg_points(name):
-    try:
-        avg_points = mean(int(x) for x in read_files.read_file('pendu/data/' + name + '_points.txt').splitlines())
-        return avg_points
-    except FileNotFoundError as error:
-        print('[UI.py :: avg_points] FileNotFoundError; ', end='')
-        print(error)
-        return 0
-    except TypeError as error:
-        print('[UI.py :: avg_points] TypeError; ', end='')
-        print(error)
-        return 0
 
   # say_hello:
   # print a welcoming message
@@ -37,20 +23,7 @@ def say_hello():
     print('You will have to find a word.')
     print('according to your time and your number of mistakes, you will earn some points. Note that in 2 players mode, you will not earn points.')
     print('if you want, your final goal will be to have the fewer point that you can!\n')
-    ### TODO: print best scores
-    #  print('actually, you have an average of', point_average, 'points.')
-    # if point_average < 10:
-    #     print('You are an excellent player!\n')
-    # elif point_average < 20:
-    #     print('You are a realy good player!')
-    # elif point_average < 30:
-    #     print('You are a good player.\n')
-    # elif point_average < 40:
-    #     print('You may do better!\n')
-    # elif point_average < 50:
-    #     print('You are not realy good at this game...\nEverybody has strong points and weak points.\n')
-    # else:
-    #     print('You are maybe not French?\n')
+    best_scores()
 
   # getChar:
   # code from https://stackoverflow.com/questions/510357/how-to-read-a-single-character-from-the-user
@@ -205,8 +178,36 @@ def get_name():
     points_average = avg_points(name)
     if points_average == 0:
         print('you have not collected points so far.')
+        write_files.write_file('pendu/data/index.txt', name + "\n")
     else:
         print('You have actually an average of', points_average, 'points.')
     input('\nPress enter to begin...')
     clear()
     return name
+
+  # avg_points:
+  # return the average of points of the user [name]
+def avg_points(name):
+    try:
+        avg_points = mean(int(x) for x in read_files.read_file('pendu/data/' + name + '_points.txt').splitlines())
+        return avg_points
+    except:
+        return 0
+
+  # best_scores:
+  # show the score board
+def best_scores():
+    scores = {}
+      # create a dictionary with all usernames and scores
+    for username in read_files.read_file('pendu/data/index.txt').splitlines():
+        scores[username] = avg_points(username)
+      # sort it
+    sorted_scores = dict(sorted(scores.items(), key= lambda x:x[1]))
+      # print the betters
+    print('best players:')
+    i = 1
+    for name, score in sorted_scores.items():
+        print(i, '. ', name, ' : ', score)
+        if i >= 5:
+            break
+        i += 1

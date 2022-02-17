@@ -107,7 +107,7 @@ def main():
     else:
         while True:
             game(UI.get_user_word().upper(), 2)
-            if not play_again():
+            if not UI.play_again():
                 return
 
 main()
