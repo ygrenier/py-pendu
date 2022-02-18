@@ -18,7 +18,7 @@ def goal_is_completed(user_word):
 def reveal_char(user_word, goal_word, letter, proposed_letters):
     letter_is_in_word = 0
     if letter in proposed_letters:
-        print('\n' + bcolors.WARNING + 'You already proposed this letter.\n' + bcolors.RESET)
+        print('\n' + bcolors.LIGHT_PURPLE + 'You already proposed this letter.\n' + bcolors.RESET)
         return 2
 
     for i in range(len(goal_word)):
@@ -27,9 +27,9 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
             letter_is_in_word = 1
 
     if letter_is_in_word:
-        print(bcolors.OK + '\nThe letter ' + letter + ' is well in the word.\n' + bcolors.RESET)
+        print(bcolors.GREEN + bcolors.BOLD + '\nThe letter ' + letter + ' is well in the word.\n' + bcolors.RESET)
     else:
-        print(bcolors.FAIL + '\nNo, the letter ' + letter + ' is not in the word.\n' + bcolors.RESET)
+        print(bcolors.RED + bcolors.BOLD + '\nNo, the letter ' + letter + ' is not in the word.\n' + bcolors.RESET)
 
     return letter_is_in_word
 
@@ -39,10 +39,10 @@ def game_turn(nb_try, proposed_letters, user_word, goal_word, is_battle: bool = 
     if not is_battle:
         UI.draw_hangman(nb_try)
     if len(proposed_letters) > 0:
-        print('You already proposed the letters:', ", ".join(proposed_letters), ".")
+        print('You already proposed the letters ' + bcolors.LIGHT_BLUE +  ", ".join(proposed_letters) + bcolors.RESET + ".")
     if not is_battle:
-        print(bcolors.WARNING + 'You still can do ' + str(7 - nb_try) + ' mistakes.' + bcolors.RESET)
-    print('This is your word:\n' + bcolors.CYAN + " ".join(user_word) + bcolors.RESET)
+        print(bcolors.YELLOW + 'You still can do ' + str(7 - nb_try) + ' mistakes.' + bcolors.RESET)
+    print('This is your word:\n' + bcolors.CYAN + bcolors.BOLD + " ".join(user_word) + bcolors.RESET)
 
     letter = UI.get_letter()
     return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
@@ -67,11 +67,11 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
             nb_try += 1
         if nb_try > 7:
             UI.draw_hangman(8)
-            print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!\n')
+            print('You did not found the word (' + bcolors.CYAN + "".join(goal_word) + bcolors.RESET + ') in less than 7 mistakes.\nYou lost!\n')
             return 0
 
       # the user won
-    print('Well done!\nYou found the word (', "".join(goal_word), ') with', nb_try, 'mistakes !\n')
+    print('Well done!\nYou found the word (' + bcolors.CYAN + "".join(goal_word) + bcolors.RESET + ') with', nb_try, 'mistakes !\n')
 
     game_time = datetime.now() - time_before
     if nb_players == 1:
@@ -79,7 +79,7 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
         if points != 0:
             write_files.write_file('pendu/data/' + name + '_points.txt', str(points) + "\n")
             point_average = UI.avg_points(name)
-            print('You have now a total of', point_average, 'points.')
+            print('You have now a total of', point_average, 'points.\n')
             return points
         return 0
 
