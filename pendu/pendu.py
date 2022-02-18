@@ -79,10 +79,11 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
         points = calculate_points(goal_word, nb_try, time_before, game_time)
         if points != 0:
             write_files.write_file('pendu/data/' + name + '_points.txt', str(points) + "\n")
-            point_average = UI.avg_points(name)
-            print('You have now a total of', point_average, 'points.\n')
+            print('You have now a total of', UI.avg_points(name), 'points.\n')
             return points
         return 0
+    else:
+        return get_points(game_time, goal_word, nb_try)
 
   # calculate_points:
   # print how many points the player earned
@@ -93,10 +94,15 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
 
     if nb_try == 0:
         print('Incredible... You found it with no mistakes!')
-    average_time = game_time / len(goal_word)
-    points = round(average_time.total_seconds()) * 6 + nb_try * 5
+    points = get_points(game_time, goal_word, nb_try)
     print('You earned a score of', points, 'points by finding this word.')
     return points
+
+  # get_points:
+  # return the number of points won with the specified settings
+def get_points(game_time, goal_word, nb_try):
+    average_time = game_time / len(goal_word)
+    return round(average_time.total_seconds()) * 6 + nb_try * 5
 
   # battle:
   # a mode where two players are fighting
@@ -114,31 +120,31 @@ def battle(nb_players):
 
     points = [0] * nb_players
 
-    print('\nYou will each your turn propose a letter for the same word.')
-    print('after 3 words, the player who found the most letters win!\n')
+    print('\nYou will have the same word to search, one after another.')
+    print('after 3 words, the player who won the most of points win!')
+    points = [0] * nb_players
     for i in range(1, settings.NB_BATTLE_ROUNDS + 1):
-        input('press <enter> to continue. ')
-        UI.clear()
-        print('round', i, ':\n')
-        turn = 0
-        nb_try = 0
-        proposed_letters = []
+        input('\npress <enter> to continue. ')
         goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
-        user_word = ['_'] * len(goal_word)
-        while not goal_is_completed(user_word):
-            print(name[turn % nb_players], 'propose a letter :')
-            if game_turn(nb_try, proposed_letters, user_word, goal_word, True): # si la lettre proposée est juste
-                points[turn % nb_players] += 1
-            turn += 1
-        print('The word was', goal_word + '.')
-        print(name[points.index(max(points))], 'is winning...')
-    UI.clear()
+        tmp_points = [0] * nb_players
+        for j in range(nb_players):
+            UI.clear()
+            print (bcolors.LIGHT_WHITE + bcolors.BOLD + name[j] + ' search the word.\n')
+            tmp_points[j] = game(goal_word, 0)
+            if tmp_points[j] > 0:
+                points[j] += tmp_points[j]
+            else:
+                points[j] += settings.WORD_NOT_FOUND_PENALITY
+        print('\n' + name[tmp_points.index(min(tmp_points))] + ' won this round.')
+        print(name[points.index(min(points))] + ' is winning the battle.\n')
+        for j in range(nb_players):
+            print(name[j], 'points: ', points[j])
 
-    print(name[points.index(max(points))], 'won the battle!\n')
+    print(name[points.index(min(points))], 'won the battle!\n')
 
     for i in range(nb_players):
         print(name[i], 'points: ', points[i])
-    input('\npress <enter> to continue. ')
+    input('\npress <enter> to leave the battle. ')
     UI.clear()
 
   # start:
