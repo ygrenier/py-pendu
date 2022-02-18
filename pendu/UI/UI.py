@@ -169,7 +169,7 @@ def play_again():
 
   # get_name:
   # get the name of the user
-def get_name(has_played):
+def get_name(has_played: bool = False):
     name = input('What is your name?\n>> ')
     while (not name.isalnum()) or (len(name) > 15):
         name = input('Please, enter fewer than 15 letters and digits:\n>> ')
@@ -223,3 +223,11 @@ battle : play in battle mode
 exit   : leave the game
 help   : print this command list
 ''')
+
+  # get_nb_players:
+  # get the number of players for the battle
+def get_nb_players():
+    nb_players = input('\nHow many players are you?\n>> ')
+    while (not nb_players.isdigit()) or (int(nb_players) > 5) or (int(nb_players) < 2):
+        nb_players = input('Please, enter a number beetween 2 and 5\n>> ')
+    return int(nb_players)

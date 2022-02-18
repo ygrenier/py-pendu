@@ -26,11 +26,30 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
             letter_is_in_word = 1
 
     if letter_is_in_word:
-        print('This letter is well in the word.\n')
+        print('\nThe letter', letter, 'is well in the word.\n')
     else:
-        print('No, this letter is not in the word.\n')
+        print('\nNo, the letter', letter, 'is not in the word.\n')
 
     return letter_is_in_word
+
+  # game_tirn:
+  # one turn in the game
+def game_turn(nb_try, proposed_letters, user_word, goal_word, is_battle: bool = False):
+    if not is_battle:
+        UI.draw_hangman(nb_try)
+    if len(proposed_letters) > 0:
+        print('You already proposed the letters:', ", ".join(proposed_letters), ".")
+    if not is_battle:
+        print('You still can do', 7 - nb_try, 'mistakes.')
+    print('This is your word:\n', " ".join(user_word))
+
+    letter = UI.get_letter()
+    return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
+    if return_code != 2:
+        proposed_letters.append(letter)
+        if return_code == 0:
+            return False
+        return True
 
   # game:
   # the main loop of the game
@@ -43,22 +62,11 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
     time_before = datetime.now()
 
     while not goal_is_completed(user_word):
-        UI.draw_hangman(nb_try)
-        if len(proposed_letters) > 0:
-            print('You already proposed the letters:', ", ".join(proposed_letters), ".")
-        print('You still can do', 7 - nb_try, 'mistakes.')
-        print('This is your word:\n', " ".join(user_word))
-
-        letter = UI.get_letter()
-        return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
-        if return_code != 2:
-            proposed_letters.append(letter)
-            if return_code == 0:
-                nb_try += 1
-
+        if not game_turn(nb_try, proposed_letters, user_word, goal_word):
+            nb_try += 1
         if nb_try > 7:
             UI.draw_hangman(8)
-            print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!')
+            print('You did not found the word (', "".join(goal_word), ') in less than 7 mistakes.\nYou lost!\n')
             return 0
 
       # the user won
@@ -71,8 +79,8 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
             write_files.write_file('pendu/data/' + name + '_points.txt', str(points) + "\n")
             point_average = UI.avg_points(name)
             print('You have now a total of', point_average, 'points.')
-
-    return points
+            return points
+        return 0
 
   # calculate_points:
   # print how many points the player earned
@@ -87,6 +95,49 @@ def calculate_points(goal_word, nb_try, time_before, game_time):
     points = round(average_time.total_seconds()) * 6 + nb_try * 5
     print('You earned a score of', points, 'points by finding this word.')
     return points
+
+  # battle:
+  # a mode where two players are fighting
+def battle(nb_players):
+    UI.clear()
+    name = []
+    for i in range(nb_players):
+        print('\nplayer', i + 1, ':')
+        tmp_name = input('What is your name?\n>> ')
+        while (not tmp_name.isalnum()) or (len(tmp_name) > 15):
+            tmp_name = input('Please, enter fewer than 15 letters and digits:\n>> ')
+        name.append(tmp_name)
+
+    dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content formatted to a list of words
+
+    points = [0] * nb_players
+
+    print('\nYou will each your turn propose a letter for the same word.')
+    print('after 3 words, the player who found the most letters win!\n')
+    for i in range(1, 4):
+        input('press <enter> to continue. ')
+        UI.clear()
+        print('round', i, ':\n')
+        turn = 0
+        nb_try = 0
+        proposed_letters = []
+        goal_word = dictionary[random.randint(0, len(dictionary) - 1)]
+        user_word = ['_'] * len(goal_word)
+        while not goal_is_completed(user_word):
+            print(name[turn % nb_players], 'propose a letter :')
+            if game_turn(nb_try, proposed_letters, user_word, goal_word, True): # si la lettre proposée est juste
+                points[turn % nb_players] += 1
+            turn += 1
+        print('The word was', goal_word + '.')
+        print(name[points.index(max(points))], 'is winning...')
+    UI.clear()
+
+    print(name[points.index(max(points))], 'won the battle!\n')
+
+    for i in range(nb_players):
+        print(name[i], 'points: ', points[i])
+    input('\npress <enter> to continue. ')
+    UI.clear()
 
   # start:
   # get the entered command
@@ -132,7 +183,7 @@ def main():
         elif cmd == 3: # entered command: top5
             UI.best_scores()
         elif cmd == 4: # entered command: battle
-            pass
+            battle(UI.get_nb_players())
         elif cmd == 5: # entered command: exit
             return
         elif cmd == 6: # entered command: help
