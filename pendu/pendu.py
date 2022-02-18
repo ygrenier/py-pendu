@@ -4,6 +4,7 @@ from UI                 import *
 from datetime           import datetime
 import random
 from colors.color_declarations import bcolors
+from settings import settings
 
   # goal_is_completed:
   # return True if the user found the word
@@ -65,7 +66,7 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
     while not goal_is_completed(user_word):
         if not game_turn(nb_try, proposed_letters, user_word, goal_word):
             nb_try += 1
-        if nb_try > 7:
+        if nb_try > settings.NB_TURNS_MAX:
             UI.draw_hangman(8)
             print('You did not found the word (' + bcolors.CYAN + "".join(goal_word) + bcolors.RESET + ') in less than 7 mistakes.\nYou lost!\n')
             return 0
@@ -86,7 +87,7 @@ def game(goal_word, nb_players, name: str = 'nameless user'):
   # calculate_points:
   # print how many points the player earned
 def calculate_points(goal_word, nb_try, time_before, game_time):
-    if nb_try > 7:
+    if nb_try > settings.NB_TURNS_MAX:
         print('You did not found the word, so you won no points this time.')
         return 0
 
@@ -115,7 +116,7 @@ def battle(nb_players):
 
     print('\nYou will each your turn propose a letter for the same word.')
     print('after 3 words, the player who found the most letters win!\n')
-    for i in range(1, 4):
+    for i in range(1, settings.NB_BATTLE_ROUNDS + 1):
         input('press <enter> to continue. ')
         UI.clear()
         print('round', i, ':\n')
@@ -154,6 +155,27 @@ def start(commands):
 
     return 1
 
+  # play1:
+  # play with one player
+def play1():
+    has_played = False
+    name = UI.get_name(has_played)
+    dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content formatted to a list of words
+    play = True
+    while play:
+        points = game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
+        if not has_played and points > 0:
+            write_files.write_file('pendu/data/index.txt', name + "\n")
+        play = UI.play_again()
+
+  # play2:
+  # play with two players
+def play2():
+    play = True
+    while play:
+        game(UI.get_user_word().upper(), 2)
+        play = UI.play_again()
+
   # main:
   # start all others functions
 def main():
@@ -165,20 +187,9 @@ def main():
     while True:
         cmd = start(commands)
         if cmd == 1: # entered command: play1
-            has_played = False
-            name = UI.get_name(has_played)
-            dictionary = read_files.read_file('pendu/data/dictionary.txt').upper().split('\n')  # get the file content formatted to a list of words
-            play = True
-            while play:
-                points = game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
-                if not has_played and points > 0:
-                    write_files.write_file('pendu/data/index.txt', name + "\n")
-                play = UI.play_again()
+            play1()
         elif cmd == 2: # entered command: play2
-            play = True
-            while play:
-                game(UI.get_user_word().upper(), 2)
-                play = UI.play_again()
+            play2()
         elif cmd == 3: # entered command: top5
             UI.best_scores()
         elif cmd == 4: # entered command: battle
