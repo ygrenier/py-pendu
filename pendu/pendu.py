@@ -3,6 +3,7 @@ from files_interactions import *
 from UI                 import *
 from datetime           import datetime
 import random
+from colors.color_declarations import bcolors
 
   # goal_is_completed:
   # return True if the user found the word
@@ -17,7 +18,7 @@ def goal_is_completed(user_word):
 def reveal_char(user_word, goal_word, letter, proposed_letters):
     letter_is_in_word = 0
     if letter in proposed_letters:
-        print('You already proposed this letter.\n')
+        print('\n' + bcolors.WARNING + 'You already proposed this letter.\n' + bcolors.RESET)
         return 2
 
     for i in range(len(goal_word)):
@@ -26,13 +27,13 @@ def reveal_char(user_word, goal_word, letter, proposed_letters):
             letter_is_in_word = 1
 
     if letter_is_in_word:
-        print('\nThe letter', letter, 'is well in the word.\n')
+        print(bcolors.OK + '\nThe letter ' + letter + ' is well in the word.\n' + bcolors.RESET)
     else:
-        print('\nNo, the letter', letter, 'is not in the word.\n')
+        print(bcolors.FAIL + '\nNo, the letter ' + letter + ' is not in the word.\n' + bcolors.RESET)
 
     return letter_is_in_word
 
-  # game_tirn:
+  # game_turn:
   # one turn in the game
 def game_turn(nb_try, proposed_letters, user_word, goal_word, is_battle: bool = False):
     if not is_battle:
@@ -40,8 +41,8 @@ def game_turn(nb_try, proposed_letters, user_word, goal_word, is_battle: bool = 
     if len(proposed_letters) > 0:
         print('You already proposed the letters:', ", ".join(proposed_letters), ".")
     if not is_battle:
-        print('You still can do', 7 - nb_try, 'mistakes.')
-    print('This is your word:\n', " ".join(user_word))
+        print(bcolors.WARNING + 'You still can do ' + str(7 - nb_try) + ' mistakes.' + bcolors.RESET)
+    print('This is your word:\n' + bcolors.CYAN + " ".join(user_word) + bcolors.RESET)
 
     letter = UI.get_letter()
     return_code = reveal_char(user_word, goal_word, letter, proposed_letters)
@@ -172,14 +173,12 @@ def main():
                 points = game(dictionary[random.randint(0, len(dictionary) - 1)], 1, name)
                 if not has_played and points > 0:
                     write_files.write_file('pendu/data/index.txt', name + "\n")
-                if not UI.play_again():
-                    play = False
+                play = UI.play_again()
         elif cmd == 2: # entered command: play2
             play = True
             while play:
                 game(UI.get_user_word().upper(), 2)
-                if not UI.play_again():
-                    play = False
+                play = UI.play_again()
         elif cmd == 3: # entered command: top5
             UI.best_scores()
         elif cmd == 4: # entered command: battle
